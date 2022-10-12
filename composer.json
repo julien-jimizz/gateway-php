@@ -1,0 +1,21 @@
+{
+  "name": "jimizz/gateway-php",
+  "description": "Jimizz Gateway - PHP Integration kit",
+  "version": "1.0.0",
+  "license": "MIT",
+  "require": {
+    "ext-gmp": "*",
+    "simplito/elliptic-php": "^1.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "Jimizz\\Gateway\\": "src/"
+    }
+  },
+  "config": {
+    "platform": {
+      "php": "7.2"
+    },
+    "sort-packages": true
+  }
+}
