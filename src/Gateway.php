@@ -31,4 +31,74 @@ class Gateway
       ...$fields
     ]);
   }
+
+  public function verifyCallback(object $payload): bool
+  {
+    if (!property_exists($payload, 'transactionId') ||
+      !property_exists($payload, 'status') ||
+      !property_exists($payload, 'keyId') ||
+      !property_exists($payload, 'signature')) {
+      return false;
+    }
+
+    $public_key = $this->retrieveKey($payload->keyId);
+    if (!$public_key) {
+      return false;
+    }
+
+    $payload = new Payload($payload);
+    return $payload->verify($public_key);
+  }
+
+  public function retrieveKey(string $id): ?string
+  {
+    $key = $this->_doCall('/keys/' . $id, 'GET');
+    if (is_object($key) && property_exists($key, 'public')) {
+      return $key->public;
+    } else {
+      return null;
+    }
+  }
+
+  private function _doCall(string $url, string $method, $data = null): ?object
+  {
+    $curl = curl_init();
+
+    switch ($method) {
+      case 'POST':
+        curl_setopt($curl, CURLOPT_POST, 1);
+        if ($data) {
+          curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
+        }
+        break;
+
+      case 'PUT':
+        curl_setopt($curl, CURLOPT_CUSTOMREQUEST, "PUT");
+        if ($data) {
+          curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
+        }
+        break;
+
+      default:
+        if ($data) {
+          $url = sprintf("%s?%s", $url, http_build_query($data));
+        }
+    }
+
+    curl_setopt($curl, CURLOPT_URL, self::API_BASE . $url);
+    curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+    curl_setopt($curl, CURLOPT_FOLLOWLOCATION, 1);
+    curl_setopt($curl, CURLOPT_HTTPHEADER, array(
+      'Accept: application/json',
+      'Content-Type: application/json',
+    ));
+
+    $result = curl_exec($curl);
+    if ($result) {
+      $result = json_decode($result);
+    }
+    curl_close($curl);
+
+    return $result;
+  }
 }

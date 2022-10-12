@@ -12,13 +12,32 @@ Requirements
 * PHP >= 7.2;
 * composer.
 
-
 Installation
 ============
 
     composer require jimizz/gateway-php
 
-License
+Example
+=======
+You can find a complete example of integration in the
+[example folder](https://github.com/julien-jimizz/gateway-php-example/tree/main/example).
+
+Create a new transaction
 =======
 
+    $gateway = new Gateway(MERCHANT_ID);
+    $transaction = $gateway->transaction($mode, $fields);
+    $transaction->sign(PRIVATE_KEY);
+    $transaction->render();
+
+Verify callback notification
+=======
+
+    $gateway = new Gateway(MERCHANT_ID);
+    if ($gateway->verifyCallback($data)) {
+        // Callback data is valid
+    }
+
+License
+=======
 Please refer to [LICENSE](https://github.com/julien-jimizz/gateway-php/blob/master/LICENSE).
