@@ -20,7 +20,7 @@ Installation
 Example
 =======
 You can find a complete example of integration in the
-[example folder](https://github.com/julien-jimizz/gateway-php-example/tree/main/example).
+[example folder](https://github.com/julien-jimizz/gateway-php/tree/main/example).
 
 Create a new transaction
 =======
@@ -30,6 +30,8 @@ Create a new transaction
     $transaction->sign(PRIVATE_KEY);
     $transaction->render();
 
+[Full example](https://github.com/julien-jimizz/gateway-php/blob/main/example/callback.php)
+
 Verify callback notification
 =======
 
@@ -37,6 +39,8 @@ Verify callback notification
     if ($gateway->verifyCallback($data)) {
         // Callback data is valid
     }
+
+[Full example](https://github.com/julien-jimizz/gateway-php/blob/main/example/payment.php)
 
 License
 =======
