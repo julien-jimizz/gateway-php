@@ -25,11 +25,12 @@ class Gateway
     array  $fields
   ): Transaction
   {
-    return new Transaction([
-      'merchantId' => $this->_merchantId,
-      'type' => $transaction_type,
-      ...$fields
-    ]);
+    return new Transaction(
+      array_merge([
+        'merchantId' => $this->_merchantId,
+        'type' => $transaction_type,
+      ], $fields)
+    );
   }
 
   public function verifyCallback(object $payload): bool
@@ -88,10 +89,10 @@ class Gateway
     curl_setopt($curl, CURLOPT_URL, self::API_BASE . $url);
     curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
     curl_setopt($curl, CURLOPT_FOLLOWLOCATION, 1);
-    curl_setopt($curl, CURLOPT_HTTPHEADER, array(
+    curl_setopt($curl, CURLOPT_HTTPHEADER, [
       'Accept: application/json',
       'Content-Type: application/json',
-    ));
+    ]);
 
     $result = curl_exec($curl);
     if ($result) {
