@@ -6,8 +6,8 @@ use Exception;
 
 class Transaction
 {
-  private Payload $_payload;
-  private string $_signature;
+  private $_payload;
+  private $_signature;
 
   public function __construct($fields)
   {
@@ -20,22 +20,29 @@ class Transaction
   }
 
   /**
+   * @param string $form_id Form ID
+   * @param bool $echo Whether to echo the form or return it as a string
+   * @return string | void
    * @throws Exception
    */
-  public function render($form_id = 'jimizz-form')
+  public function render(string $form_id = 'jimizz-form', bool $echo = true)
   {
     if (empty($this->_signature)) {
       throw new Exception('You must sign first');
     }
 
-    ?>
-    <form action="<?= Gateway::API_BASE ?>/" method="post" id="<?= $form_id; ?>">
-      <?php foreach ($this->_payload->getRawFields() as $key => $value): ?>
-        <input type="hidden" name="<?= htmlspecialchars($key); ?>" value="<?= htmlspecialchars($value); ?>">
-      <?php endforeach; ?>
-      <input type="hidden" name="signature" value="<?= htmlspecialchars($this->_signature); ?>">
-      <button type="submit">Send</button>
-    </form>
-    <?php
+    $form = '<form action="' . Gateway::API_BASE . '" method="post" id="' . $form_id . '">';
+    foreach ($this->_payload->getRawFields() as $key => $value) {
+      $form .= '<input type="hidden" name="' . htmlspecialchars($key) . '" value="' . htmlspecialchars($value) . '">';
+    }
+    $form .= '<input type="hidden" name="signature" value="' . htmlspecialchars($this->_signature) . '">';
+    $form .= '<button type="submit">Send</button>';
+    $form .= '</form>';
+
+    if ($echo) {
+      echo $form;
+    } else {
+      return $form;
+    }
   }
 }
