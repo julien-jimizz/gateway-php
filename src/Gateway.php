@@ -8,7 +8,7 @@ class Gateway
 {
   public const API_BASE = 'https://gateway.jimizz.com/api';
 
-  private string $_merchantId;
+  private $_merchantId;
 
   public function __construct(
     string $merchantId

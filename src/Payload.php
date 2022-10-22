@@ -8,7 +8,7 @@ use Throwable;
 
 class Payload
 {
-  private array $_fields;
+  private $_fields;
 
   public function __construct($fields)
   {
@@ -34,6 +34,9 @@ class Payload
     return $signature->toDER('hex');
   }
 
+  /**
+   * @throws Exception
+   */
   public function verify(string $public_key): bool
   {
     if (!isset($this->_fields['signature'])) {
